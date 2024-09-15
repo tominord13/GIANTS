@@ -24,7 +24,9 @@ def get_feature_names():
 def prepare_kano_data(df):
     """Prepares the Kano-related columns from the DataFrame."""
     df_kano = df.iloc[:, 51:99]
+    print(df_kano)
     return df_kano
+
 
 def apply_kano_scoring(df_kano, feature_names):
     """Applies Kano scoring to functional and dysfunctional responses."""
