@@ -184,9 +184,9 @@ def classify_income(income):
 
 #Classification of Vehicle Type
 def classify_mode_of_transport(mode):
-    # Standardizing by stripping whitespace and lowering case
-    mode = mode.strip().lower()
-
+    # Convert to string and handle missing values
+    mode = str(mode).strip().lower() if pd.notnull(mode) else "unknown"
+    
     # Classify into specific vehicle types or categories
     if mode == "sedan (traditional passenger car)":
         return "Sedan"
@@ -211,39 +211,28 @@ def classify_mode_of_transport(mode):
     else:
         return "Other"
 
-
-
-
-#This is the main personas classification function. Each attribute is stored in a dictionary.
-def classify_persona(row):
-    classifications = {
-        'age': classify_age(row['AGE']),
-        'market': classify_market(row['COUNTRY']),
-        'gender': classify_gender(row['GENDER']),
-        'city_type': classify_city(row['CITY']),
-        'user_type': classify_user_type(row['USER TYPE']),
-        'education': classify_education(row['EDUCATION']),
-        'income': classify_income(row['INCOME']),
-        'mode':classify_mode_of_transport(row['PRIMARY TRANSPORT MODE'])
-    }
-    # Combine into final persona string
-    return f"{classifications['mode']} {classifications['user_type']} {classifications['gender']} {classifications['age']} from {classifications['market']} living in a {classifications['city_type']} area with a {classifications['education']} education level and {classifications['income']}"
+def classify_trip_purpose(purpose):
+    """Classifies the trip purposes for the primary mode of transport based on multiple choice answers."""
     
-
-# Apply the classification function
-def apply_persona_classification(df):
-    df['Persona'] = df.apply(classify_persona, axis=1)
-    return df
-
-#filtering the students persona
-def filter_students_persona(df):
-    """
-    Filter the dataset for respondents who are classified as:
-    - Low income
-    - Young (ages 18-29)
-    - From an advanced market
-    """
-    # Ensure the necessary classifications have already been applied
-    students_df = df(df['INCOME'] == 'Middle Income')
+    # Ensure input is handled properly for missing or invalid data
+    if pd.isnull(purpose):
+        return "unknown"
     
-    return students_df
+    purpose = purpose.strip().lower()  # Ensure the response is standardized
+    
+    # Map multiple-choice responses to broader categories
+    if purpose in ["commuting to work", "commuting to school"]:
+        return "commuting"
+    elif purpose in ["leisure activities", "recreation", "going to the gym", "entertainment"]:
+        return "leisure"
+    elif purpose in ["grocery shopping", "shopping for goods"]:
+        return "shopping"
+    elif purpose in ["running errands", "appointments", "personal business"]:
+        return "errands"
+    elif purpose in ["visiting friends", "visiting family", "social events"]:
+        return "social/visiting"
+    else:
+        return "other"  # Catch-all for any other category
+
+
+

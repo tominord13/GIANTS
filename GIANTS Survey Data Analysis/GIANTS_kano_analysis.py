@@ -3,7 +3,6 @@ import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
-from GIANTS_personas_classification import filter_students_persona 
 
 # Set the font to serif globally
 plt.rcParams["font.family"] = "sans-serif"
@@ -23,8 +22,7 @@ def get_feature_names():
 
 def prepare_kano_data(df):
     """Prepares the Kano-related columns from the DataFrame."""
-    df_kano = df.iloc[:, 51:99]
-    print(df_kano)
+    df_kano = df.iloc[:, 51:98]
     return df_kano
 
 
@@ -253,32 +251,5 @@ def plot_kano_by_age_group(df, df_kano, feature_names):
 
       # Return all figures if needed for other operations
       
-def kano_analysis_for_students(df, df_kano, feature_names):
-    """
-    Perform Kano analysis for the 'students' persona.
-    """
-    # Step 1: Filter the data for 'students' persona
-    students_df = filter_students_persona(df)  # Ensure 'filter_students_persona' is imported
-    
-    if students_df.empty:
-        print("No respondents match the 'students' persona criteria.")
-        return None
-    # Try filtering only by age or market and print the result
-    students_by_age = df[df['age'] == 'Young ']
-    print(students_by_age.head())  # See if any respondents match this age group
-
-    students_by_market = df[df['market'] == 'Advanced Market']
-    print(students_by_market.head())  # See if any respondents match this market
-
-    # Step 2: Filter the Kano data based on the filtered student respondents
-    df_kano_students = df_kano.loc[students_df.index]
-    
-    # Step 3: Calculate the Kano averages for the students
-    df_averages_students = calculate_kano_averages(df_kano_students, feature_names)
-    
-    # Step 4: Plot the Kano results for the 'students' persona
-    fig = plot_kano_results(df_averages_students, plot_title="Kano Analysis for Students Persona")
-    
-    return fig
 
 
