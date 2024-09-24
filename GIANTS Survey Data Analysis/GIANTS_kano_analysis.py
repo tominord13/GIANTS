@@ -25,7 +25,6 @@ def prepare_kano_data(df):
     df_kano = df.iloc[:, 51:98]
     return df_kano
 
-
 def apply_kano_scoring(df_kano, feature_names):
     """Applies Kano scoring to functional and dysfunctional responses."""
     
@@ -38,12 +37,16 @@ def apply_kano_scoring(df_kano, feature_names):
         scoring = {"I like it": -2, "I expect it": -1, "I am neutral": 0, "I can tolerate it": 2, "I dislike it": 4}
         return scoring.get(response, 0)
     
+    # Create a copy of df_kano to avoid working on a view
+    df_kano = df_kano.copy()
+
     # Apply the scoring functions to the columns
     for i, feature_name in enumerate(feature_names):
-        df_kano[f'{feature_name}_functional_score'] = df_kano.iloc[:, 2*i].apply(score_functional)
-        df_kano[f'{feature_name}_dysfunctional_score'] = df_kano.iloc[:, 2*i + 1].apply(score_dysfunctional)
+        df_kano.loc[:, f'{feature_name}_functional_score'] = df_kano.iloc[:, 2*i].apply(score_functional)
+        df_kano.loc[:, f'{feature_name}_dysfunctional_score'] = df_kano.iloc[:, 2*i + 1].apply(score_dysfunctional)
     
     return df_kano
+
 
 def calculate_kano_averages(df_kano, feature_names):
     """Calculates the average functional and dysfunctional scores for each feature, including standard deviation."""

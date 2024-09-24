@@ -32,7 +32,7 @@ def preprocess_for_clustering(df):
     return df_scaled, df_encoded
 
 
-def perform_clustering(df_scaled, df_encoded, n_clusters=4):
+def perform_clustering(df_scaled, df_encoded, n_clusters=3):
     """Performs KMeans clustering and assigns cluster labels to the DataFrame."""
     
     # Perform KMeans clustering
