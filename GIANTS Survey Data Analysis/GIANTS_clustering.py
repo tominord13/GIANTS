@@ -15,7 +15,7 @@ def preprocess_for_clustering(df):
     """Preprocesses the data for clustering by encoding and scaling all relevant features."""
     
     # Define all the categorical columns to be encoded
-    categorical_columns = ['age', 'market', 'gender', 'city_type', 'user_type', 'education', 'income', 'mode', 'purpose']
+    categorical_columns = ['age', 'market', 'gender', 'user_type', 'education', 'income', 'mode']
 
     
     # Apply OneHotEncoder to the categorical columns
@@ -49,34 +49,38 @@ def perform_clustering(df_scaled, df_encoded, n_clusters=3):
 
 
 
-# The visualize_clusters_with_pca function should be as follows:
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.decomposition import PCA
+
+
 def visualize_clusters_with_pca(df_scaled, df_with_clusters):
-    """Visualizes clusters using PCA and Seaborn scatterplot with transparency and jitter."""
+    """Visualizes clusters using PCA in 3D using Plotly."""
     
-    # Apply PCA to reduce the data to 2 components
-    pca = PCA(n_components=2)
+    # Apply PCA to reduce the data to 3 components
+    pca = PCA(n_components=3)
     df_pca = pca.fit_transform(df_scaled)
 
-    # Create a scatter plot using Seaborn with transparency (alpha) and jitter
-    plt.figure(figsize=(10, 6))
-    
-    sns.scatterplot(
-    x=df_pca[:, 0], 
-    y=df_pca[:, 1], 
-    hue=df_with_clusters['cluster'], 
-    palette="tab10",  # Use tab10 for distinct colors
-    alpha=0.8,
-    s=100
+    # Convert to a DataFrame for easier plotting
+    df_pca = pd.DataFrame(df_pca, columns=['PC1', 'PC2', 'PC3'])
+    df_pca['cluster'] = df_with_clusters['cluster']
+
+    # Create a 3D scatter plot with Plotly
+    fig = px.scatter_3d(
+        df_pca,
+        x='PC1', y='PC2', z='PC3',
+        color='cluster',
+        title='3D Cluster Visualization with PCA',
+        labels={'PC1': 'PCA Component 1', 'PC2': 'PCA Component 2', 'PC3': 'PCA Component 3'}
     )
+    
+    fig.show()
 
-    plt.title('Cluster Visualization using PCA with Jitter')
-    plt.xlabel('PCA Component 1')
-    plt.ylabel('PCA Component 2')
-    plt.legend(title='Cluster')
-    plt.show()
+    # Return PCA object for further analysis
+    return pca
 
-    # Check how many points were plotted (rows in the PCA data)
-    print("Number of points plotted:", df_pca.shape[0])
+
 
 
 def plot_elbow_method(df_scaled, max_clusters=10):
@@ -110,3 +114,36 @@ def summarize_clusters(df_with_clusters):
     
     # Optionally return the styled summary for further display or use
     return styled_summary
+
+def plot_pca_loadings(pca, feature_names):
+    """Plots the loadings of each feature on the first two principal components."""
+    # Get PCA Loadings
+    pca_loadings = pd.DataFrame(pca.components_.T, columns=['PC1', 'PC2'], index=feature_names)
+    print("\nPCA Loadings:")
+    print(pca_loadings)
+
+    # Plot the PCA Loadings
+    plt.figure(figsize=(8, 6))
+    plt.bar(pca_loadings.index, pca_loadings['PC1'], color='blue', alpha=0.6, label='PC1')
+    plt.bar(pca_loadings.index, pca_loadings['PC2'], color='red', alpha=0.6, label='PC2')
+    plt.title('PCA Loadings for PC1 and PC2')
+    plt.ylabel('Feature Contribution')
+    plt.xticks(rotation=45, ha='right')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+    return pca_loadings
+
+
+def plot_explained_variance(pca):
+    """Plots the explained variance for each principal component."""
+    explained_variance = pca.explained_variance_ratio_
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(np.cumsum(explained_variance), marker='o', linestyle='--')
+    plt.title('Cumulative Explained Variance')
+    plt.xlabel('Number of Components')
+    plt.ylabel('Cumulative Variance Explained')
+    plt.grid(True)
+    plt.show()
