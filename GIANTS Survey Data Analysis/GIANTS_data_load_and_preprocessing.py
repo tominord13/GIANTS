@@ -25,8 +25,37 @@ def preprocess_data(df):
         '8. How many people  / family members live in your household? (for safety related questions) [Adults (18 and older)]': 'ADULTS',
         '8. How many people  / family members live in your household? (for safety related questions) [Kids (6-17)]': 'KIDS',
         '8. How many people  / family members live in your household? (for safety related questions) [Toddlers (1-5)]': 'TODDLERS',
-        '8. How many people  / family members live in your household? (for safety related questions) [Infants (younger than 1)]': 'INFANTS'
+        '8. How many people  / family members live in your household? (for safety related questions) [Infants (younger than 1)]': 'INFANTS',
+        # Adding the vehicle features renaming
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Additional Heating]': 'Additional Heating',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Air Conditioning]': 'Air Conditioning',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Cargo / Passenger capacity]': 'Cargo Capacity',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Price]': 'Price',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Tailorable (vehicle modifications made by the user) changes in seating and cargo space]': 'Tailorability',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Doors]': 'Doors',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Charging Infrastructure]': 'Charging Infrastructure',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Safety Features (in general)]': 'Safety Features General',
+        '55. How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Vehicle Aesthetics and Design]': 'Aesthetics and Design',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Price]': 'Price 2',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Safety features (in general)]': 'Safety Features General 2',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Anti-theft features]': 'Anti-Theft Features',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Range (cover longer distances without charging)]': 'Range',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Rapid charging]': 'Rapid Charging',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Swappable batteries for charging (lighter, ability to self-swap)]': 'Swappable Batteries',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Comfort features - Space (legroom and headspace)]': 'Comfort Space',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Comfort Features – Acoustic (shield from noise)]': 'Acoustic Comfort',
+        '56.  How important do you rank the following features (1 = Not Important, 9 = Extremely Important) [Solar panels]': 'Solar Panels',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Anti-Lock Braking Systems (ABS)]': 'ABS',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Driving in reverse / Backing up alarm]': 'Reverse Alarm',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Headrests]': 'Headrests',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Side/rear-view mirrors]': 'Mirrors',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Airbags]': 'Airbags',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Crumple zones]': 'Crumple Zones',
+        '57.  How important do you rank the following safety features (1 = Not Important, 9 = Extremely Important) [Collapsable steering column]': 'Collapsible Steering Column'
     })
+    
+    
+
     
     # Print the column names of the DataFrame as a list
     print(list(df.columns))

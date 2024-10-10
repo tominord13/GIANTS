@@ -1,15 +1,31 @@
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.cluster import KMeans
+from sklearn.impute import SimpleImputer
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 import seaborn as sns
+import plotly.express as px
 from GIANTS_personas_classification import classify_market, classify_income, classify_age, classify_mode_of_transport, classify_city, classify_gender, classify_trip_purpose
 
-# Preprocess data specifically for clustering
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-import pandas as pd
+
+def preprocess_numerical_for_clustering(df, importance_columns):
+    """Preprocesses the numerical data for clustering by imputing and scaling the importance columns."""
+    
+    # Extract the importance columns (numerical columns)
+    df_importance = df[importance_columns]
+
+    # Impute missing values in the importance columns with the mean value
+    imputer = SimpleImputer(strategy='mean')
+    df_importance_imputed = pd.DataFrame(imputer.fit_transform(df_importance), columns=df_importance.columns)
+
+    # Scale the numerical data
+    scaler = StandardScaler()
+    df_scaled = scaler.fit_transform(df_importance_imputed)
+
+    # Return the scaled DataFrame and the original DataFrame for reference
+    return df_scaled, df_importance_imputed
 
 def preprocess_for_clustering(df):
     """Preprocesses the data for clustering by encoding and scaling all relevant features."""
@@ -17,7 +33,6 @@ def preprocess_for_clustering(df):
     # Define all the categorical columns to be encoded
     categorical_columns = ['age', 'market', 'gender', 'user_type', 'education', 'income', 'mode']
 
-    
     # Apply OneHotEncoder to the categorical columns
     encoder = OneHotEncoder(drop='first', sparse_output=False)  # Drop first to avoid collinearity
     encoded_data = encoder.fit_transform(df[categorical_columns])
@@ -32,7 +47,10 @@ def preprocess_for_clustering(df):
     return df_scaled, df_encoded
 
 
-def perform_clustering(df_scaled, df_encoded, n_clusters=3):
+
+
+
+def perform_clustering(df_scaled, df_encoded, n_clusters=4):
     """Performs KMeans clustering and assigns cluster labels to the DataFrame."""
     
     # Perform KMeans clustering
@@ -55,30 +73,32 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 
 
-def visualize_clusters_with_pca(df_scaled, df_with_clusters):
-    """Visualizes clusters using PCA in 3D using Plotly."""
-    
-    # Apply PCA to reduce the data to 3 components
-    pca = PCA(n_components=3)
-    df_pca = pca.fit_transform(df_scaled)
+def pca_and_visualize(df_scaled, df_with_clusters, n_components=3):
+    """
+    Perform PCA on the scaled data and visualize clusters in PCA space.
+    """
+    pca = PCA(n_components=n_components)
+    pca_components = pca.fit_transform(df_scaled)
 
-    # Convert to a DataFrame for easier plotting
-    df_pca = pd.DataFrame(df_pca, columns=['PC1', 'PC2', 'PC3'])
-    df_pca['cluster'] = df_with_clusters['cluster']
+    # Create a DataFrame for the PCA components
+    df_pca = pd.DataFrame(data=pca_components, columns=[f'PC{i+1}' for i in range(n_components)])
 
-    # Create a 3D scatter plot with Plotly
+    # Add cluster information to the PCA DataFrame, convert cluster to string to ensure categorical treatment
+    df_pca['cluster'] = df_with_clusters['cluster'].astype(str)
+
+    # Plot the 3D PCA scatter plot with distinct colors for each cluster
     fig = px.scatter_3d(
-        df_pca,
-        x='PC1', y='PC2', z='PC3',
-        color='cluster',
+        df_pca, 
+        x='PC1', y='PC2', z='PC3', 
+        color='cluster', 
         title='3D Cluster Visualization with PCA',
-        labels={'PC1': 'PCA Component 1', 'PC2': 'PCA Component 2', 'PC3': 'PCA Component 3'}
+        labels={'PC1': 'PCA Component 1', 'PC2': 'PCA Component 2', 'PC3': 'PCA Component 3'},
+        color_discrete_sequence=px.colors.qualitative.Set1  # Set distinct colors for clusters
     )
-    
+
     fig.show()
 
-    # Return PCA object for further analysis
-    return pca
+    return pca, df_pca
 
 
 
