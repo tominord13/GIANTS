@@ -139,8 +139,8 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
     )
 
     # Custom axis labels
-    dysfunctional_labels = ['Like', 'Must-be', 'Neutral', 'Live with', 'Dislike']
-    functional_labels = ['Dislike', 'Live with', 'Neutral', 'Neutral', 'Like']
+    dysfunctional_labels = ['Like', 'Must have', 'Neutral', 'Live with', 'Dislike']
+    functional_labels = ['Dislike', 'Live with', 'Neutral', 'Expect', 'Like']
 
     fig.update_xaxes(
         tickvals=[-2, -1, 0, 2, 4],
@@ -176,7 +176,7 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
     # Quadrant annotations
     fig.add_annotation(text="Performance", x=3, y=3.5, showarrow=False, font=dict(size=16, color="LightSeaGreen"))
     fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16, color="LightCoral"))
-    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16, color="LightBlue"))
+    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16, color="Blue"))
     fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16, color="Gray"))
 
     return fig
