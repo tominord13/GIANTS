@@ -22,7 +22,7 @@ def get_feature_names():
 
 def prepare_kano_data(df):
     """Prepares the Kano-related columns from the DataFrame."""
-    df_kano = df.iloc[:, 51:98]
+    df_kano = df.iloc[:, 51:99]
     return df_kano
 
 def apply_kano_scoring(df_kano, feature_names):
@@ -140,7 +140,7 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
 
     # Custom axis labels
     dysfunctional_labels = ['Like', 'Must-be', 'Neutral', 'Live with', 'Dislike']
-    functional_labels = ['Dislike', 'Live with', 'Neutral', 'Neutral', 'Like']
+    functional_labels = ['Dislike', 'Live with', 'Neutral', 'Expect it', 'Like']
 
     fig.update_xaxes(
         tickvals=[-2, -1, 0, 2, 4],
