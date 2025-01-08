@@ -112,7 +112,7 @@ def plot_feature_means_with_std(df_averages):
     ax.grid(True, linestyle='--', alpha=0.6)
 
     # Add a legend for functional/dysfunctional score interpretation
-    ax.text(-1, -3.5, "Functional Scoring:\n-2: Dislike, -1: Live with, 0: Neutral, 2: Must-be, 4: Like", 
+    ax.text(-1, -3.5, "Functional Scoring:\n-2: Dislike, -1: Tolerate, 0: Neutral, 2: Must-be, 4: Like", 
             fontsize=10, color='blue', ha='left', bbox=dict(facecolor='white', alpha=0.7))
 
     ax.text(-1, -4, "Dysfunctional Scoring:\n-2: Like, -1: Expect, 0: Neutral, 2: Tolerate, 4: Dislike", 
@@ -139,8 +139,8 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
     )
 
     # Custom axis labels
-    dysfunctional_labels = ['Like', 'Must-be', 'Neutral', 'Live with', 'Dislike']
-    functional_labels = ['Dislike', 'Live with', 'Neutral', 'Expect it', 'Like']
+    dysfunctional_labels = ['Like', 'Must-be', 'Neutral', 'Tolerate', 'Dislike']
+    functional_labels = ['Dislike', 'Tolerate', 'Neutral', 'Expect it', 'Like']
 
     fig.update_xaxes(
         tickvals=[-2, -1, 0, 2, 4],
@@ -174,10 +174,10 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
                   fillcolor="LightGray", opacity=0.3, layer="below")
 
     # Quadrant annotations
-    fig.add_annotation(text="Performance", x=3, y=3.5, showarrow=False, font=dict(size=16, color="LightSeaGreen"))
-    fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16, color="LightCoral"))
-    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16, color="LightBlue"))
-    fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16, color="Gray"))
+    fig.add_annotation(text="Performance", x=3, y=3.5, showarrow=False, font=dict(size=16,))
+    fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16,))
+    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16,))
+    fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16,))
 
     return fig
 
