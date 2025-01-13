@@ -174,7 +174,7 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
                   fillcolor="LightGray", opacity=0.3, layer="below")
 
     # Quadrant annotations
-    fig.add_annotation(text="Performance", x=3, y=3.5, showarrow=False, font=dict(size=16,))
+    fig.add_annotation(text="One-dimensional", x=3, y=3.5, showarrow=False, font=dict(size=16,))
     fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16,))
     fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16,))
     fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16,))
@@ -216,7 +216,7 @@ def plot_interactive_scatter_for_feature(df_kano, feature_name):
                   fillcolor="LightGray", opacity=0.3, layer="below")
 
     # Quadrant annotations
-    fig.add_annotation(text="Performance", x=3, y=3.5, showarrow=False, font=dict(size=16, color="LightSeaGreen"))
+    fig.add_annotation(text="One-dimensional", x=3, y=3.5, showarrow=False, font=dict(size=16, color="LightSeaGreen"))
     fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16, color="LightCoral"))
     fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16, color="LightBlue"))
     fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16, color="Gray"))
