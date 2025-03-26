@@ -3,6 +3,7 @@ import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.graph_objects as go
 
 # Set the font to serif globally
 plt.rcParams["font.family"] = "sans-serif"
@@ -90,20 +91,6 @@ def plot_feature_means_with_std(df_averages):
 
     fig, ax = plt.subplots(figsize=(12, 10))
 
-    # Error bars for functional and dysfunctional scores
-    ax.errorbar(x - width/2, functional_means, yerr=functional_stddev, fmt='o', 
-                label='Functional Score', color='royalblue', ecolor='skyblue', 
-                capsize=5, capthick=2, markersize=8, linestyle='None', marker='D')
-
-    ax.errorbar(x + width/2, dysfunctional_means, yerr=dysfunctional_stddev, fmt='o', 
-                label='Dysfunctional Score', color='tomato', ecolor='lightcoral', 
-                capsize=5, capthick=2, markersize=8, linestyle='None', marker='s')
-
-    # Improve aesthetics
-    ax.set_xlabel('Features', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Average Score', fontsize=12, fontweight='bold')
-    ax.set_title('Kano Feature Analysis: Functional vs Dysfunctional Scores', fontsize=16, fontweight='bold')
-
     # Add custom x-ticks
     ax.set_xticks(x)
     ax.set_xticklabels(features, rotation=90, fontsize=8)
@@ -113,10 +100,10 @@ def plot_feature_means_with_std(df_averages):
 
     # Add a legend for functional/dysfunctional score interpretation
     ax.text(-1, -3.5, "Functional Scoring:\n-2: Dislike, -1: Tolerate, 0: Neutral, 2: Must-be, 4: Like", 
-            fontsize=10, color='blue', ha='left', bbox=dict(facecolor='white', alpha=0.7))
+            fontsize=20, color='blue', ha='left', bbox=dict(facecolor='white', alpha=0.7))
 
     ax.text(-1, -4, "Dysfunctional Scoring:\n-2: Like, -1: Expect, 0: Neutral, 2: Tolerate, 4: Dislike", 
-            fontsize=10, color='red', ha='left', bbox=dict(facecolor='white', alpha=0.7))
+            fontsize=20, color='red', ha='left', bbox=dict(facecolor='white', alpha=0.7))
 
     # Add a legend
     ax.legend(loc='upper left', fontsize=12)
@@ -138,23 +125,41 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
         #error_y='Functional StdDev'  # Add standard deviation for functional scores
     )
 
+    fig.update_layout(height=800, width=1400)  # Adjust height as needed
+    
+
+
     # Custom axis labels
     dysfunctional_labels = ['Like', 'Must-be', 'Neutral', 'Tolerate', 'Dislike']
     functional_labels = ['Dislike', 'Tolerate', 'Neutral', 'Expect it', 'Like']
 
     fig.update_xaxes(
-        tickvals=[-2, -1, 0, 2, 4],
-        ticktext=dysfunctional_labels,
-        title="Dysfunctional"
+    tickvals=[-2, -1, 0, 2, 4],
+    ticktext=dysfunctional_labels,
+    title="Dysfunctional",
+    tickfont=dict(size=18)  # Increased font size for x-axis labels
     )
 
     fig.update_yaxes(
-        tickvals=[-2, -1, 0, 2, 4],
-        ticktext=functional_labels,
-        title="Functional"
+    tickvals=[-2, -1, 0, 2, 4],
+    ticktext=functional_labels,
+    title="Functional",
+    tickfont=dict(size=18)  # Increased font size for y-axis labels
     )
+   
 
-    fig.update_traces(textposition='top center')
+    fig.update_layout(
+    xaxis_title=dict(
+        text="Dysfunctional",
+        font=dict(size=20)  # Adjust the size here
+    ),
+    yaxis_title=dict(
+        text="Functional",
+        font=dict(size=20)  # Adjust the size here
+    )
+    )
+    
+    fig.update_traces(textposition='bottom right', textfont=dict(size=14))
 
     # Add quadrant shapes and labels
     fig.add_shape(type="rect", x0=2, x1=4, y0=2, y1=4,
@@ -173,11 +178,36 @@ def plot_kano_results(df_averages, plot_title='Kano Model: Functional vs. Dysfun
                   line=dict(color="Gray"),
                   fillcolor="LightGray", opacity=0.3, layer="below")
 
-    # Quadrant annotations
-    fig.add_annotation(text="One-dimensional", x=3, y=3.5, showarrow=False, font=dict(size=16,))
-    fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False, font=dict(size=16,))
-    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False, font=dict(size=16,))
-    fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False, font=dict(size=16,))
+   # Quadrant annotations
+    fig.add_annotation(
+        text="One-dimensional",
+        x=3,
+        y=3.5,
+        showarrow=False,
+        font=dict(size=20, color="LightSeaGreen", family="Arial", weight="bold")
+    )
+    fig.add_annotation(
+        text="Must-have",
+        x=3,
+        y=1,
+        showarrow=False,
+        font=dict(size=20, color="LightCoral", family="Arial", weight="bold")
+    )
+    fig.add_annotation(
+        text="Attractive",
+        x=1,
+        y=3.5,
+        showarrow=False,
+        font=dict(size=20, color="Blue", family="Arial", weight="bold")
+    )
+    fig.add_annotation(
+        text="Indifferent",
+        x=1,
+        y=1,
+        showarrow=False,
+        font=dict(size=20, color="Gray", family="Arial", weight="bold")
+    )
+
 
     return fig
 
@@ -254,5 +284,117 @@ def plot_kano_by_age_group(df, df_kano, feature_names):
 
       # Return all figures if needed for other operations
       
+def plot_kano_with_leader_lines(df_averages, plot_title="Kano Analysis with Leader Lines"):
+    fig = go.Figure()
+
+    # Add scatter points
+    fig.add_trace(go.Scatter(
+        x=df_averages['Average Dysfunctional Score'],
+        y=df_averages['Average Functional Score'],
+        mode='markers',
+        marker=dict(size=10, color='steelblue'),
+        hovertext=df_averages['Feature'],
+        hoverinfo='text'
+    ))
+
+
+
+    from collections import defaultdict
+    import random
+
+    # Group points by quadrant and track how many are in each to space them out
+    quadrant_counters = defaultdict(int)
+
+    for i, row in df_averages.iterrows():
+        x = row['Average Dysfunctional Score']
+        y = row['Average Functional Score']
+
+        # Determine quadrant
+        if x >= 2 and y >= 2:
+            quadrant = "Q1"
+            dx_base, dy_base = 0.6, 0.6
+        elif x < 2 and y >= 2:
+            quadrant = "Q2"
+            dx_base, dy_base = -0.6, 0.6
+        elif x < 2 and y < 2:
+            quadrant = "Q3"
+            dx_base, dy_base = -0.6, -0.6
+        else:
+            quadrant = "Q4"
+            dx_base, dy_base = 0.6, -0.6
+
+        # Offset based on how many labels are already in this quadrant
+        count = quadrant_counters[quadrant]
+
+        # Random scale factor to add variation to leader line length
+        scale_x = random.uniform(0.1, 1) + (count % 3) * 0.2
+        scale_y = random.uniform(0.1, 1) + (count // 3) * 0.2
+
+        spread_x = dx_base * scale_x
+        spread_y = dy_base * scale_y
+
+        quadrant_counters[quadrant] += 1
+
+        fig.add_annotation(
+            x=x,
+            y=y,
+            ax=x + spread_x,
+            ay=y + spread_y,
+            xref='x', yref='y',
+            axref='x', ayref='y',
+            text=row['Feature'],
+            showarrow=True,
+            arrowhead=2,
+            font=dict(size=13),
+            bgcolor="white",
+            opacity=0.95
+        )
+
+
+
+
+
+
+    # Add quadrant rectangles
+    fig.add_shape(type="rect", x0=2, x1=4, y0=2, y1=4,
+                  line=dict(color="LightSeaGreen"),
+                  fillcolor="PaleTurquoise", opacity=0.3, layer="below")
+
+    fig.add_shape(type="rect", x0=2, x1=4, y0=0, y1=2,
+                  line=dict(color="LightCoral"),
+                  fillcolor="LightSalmon", opacity=0.3, layer="below")
+
+    fig.add_shape(type="rect", x0=0, x1=2, y0=2, y1=4,
+                  line=dict(color="LightBlue"),
+                  fillcolor="LightSteelBlue", opacity=0.3, layer="below")
+
+    fig.add_shape(type="rect", x0=0, x1=2, y0=0, y1=2,
+                  line=dict(color="Gray"),
+                  fillcolor="LightGray", opacity=0.3, layer="below")
+
+    # Quadrant labels
+    fig.add_annotation(text="One-dimensional", x=3, y=3.5, showarrow=False,
+                       font=dict(size=18, color="LightSeaGreen"))
+    fig.add_annotation(text="Must-have", x=3, y=1, showarrow=False,
+                       font=dict(size=18, color="LightCoral"))
+    fig.add_annotation(text="Attractive", x=1, y=3.5, showarrow=False,
+                       font=dict(size=18, color="Blue"))
+    fig.add_annotation(text="Indifferent", x=1, y=1, showarrow=False,
+                       font=dict(size=18, color="Gray"))
+
+    # Axis setup
+    fig.update_layout(
+        title=plot_title,
+        xaxis_title="Dysfunctional Score",
+        yaxis_title="Functional Score",
+        xaxis=dict(tickvals=[-2, -1, 0, 2, 4],
+                   ticktext=["Like", "Expect", "Neutral", "Tolerate", "Dislike"]),
+        yaxis=dict(tickvals=[-2, -1, 0, 2, 4],
+                   ticktext=["Dislike", "Tolerate", "Neutral", "Expect", "Like"]),
+        height=800,
+        width=1400
+    )
+
+    return fig
 
 
