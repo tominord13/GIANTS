@@ -290,7 +290,7 @@ class McapReader:
 
 if __name__ == '__main__':
     # Absolute path to your .mcap file
-    file_path = r"C:\Users\TomiNordi2m\OneDrive - i2m Unternehmensentwicklung GmbH\Documents\Python\Wessely\ShellyData\ShellyPro3EM.mcap"
+    file_path = r"C:\Users\TomiNordi2m\OneDrive - i2m Unternehmensentwicklung GmbH\Documents\E-Flex\merged_data\combined_ShellyPro3EM.mcap"
 
     # Open MCAP file and print info
     mcap_reader = McapReader()
@@ -302,7 +302,7 @@ if __name__ == '__main__':
     import datetime
 
     # Output folder
-    output_dir = "./csv_output"
+    output_dir = r"C:\Users\TomiNordi2m\OneDrive - i2m Unternehmensentwicklung GmbH\Documents\E-Flex\converted_csv"
     os.makedirs(output_dir, exist_ok=True)
 
     # Loop through all available topics
